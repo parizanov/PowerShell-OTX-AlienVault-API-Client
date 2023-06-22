@@ -71,3 +71,59 @@ function Get-OTXApiKey {
         return $null
     }
 }
+
+function Get-OTXSubPulses {
+    <#
+    .SYNOPSIS
+    Retrieves all pulses from the AlienVault OTX (Open Threat Exchange) API for which you are subscribed to.
+
+    .DESCRIPTION
+    The Get-OTXSubPulses function retrievs all the pulses from the AlienVault OTX (Open Threat Exchange) API for which you are subscribed to.
+    The function iterates through multiple pages of results, if there are such, until the specified maximum page limit is reached.
+    Each page contains a list of pulses, and the function accumulates all the pulses in a response list.
+
+    .PARAMETER MaxPage
+    The maximum number of pages to retrieve. Each page contains a list of pulses.
+    By default, the MaxPage parameter is set to 5.
+
+    .EXAMPLE
+    Get-OTXSubPulses -MaxPage 10
+    Retrieves the pulses from the AlienVault OTX (Open Threat Exchange) API for which you are subscribed to, limiting the result to 10 pages.
+
+    .INPUTS
+    None. You cannot pipe input to this function.
+
+    .OUTPUTS
+    System.Object[]
+    A list of pulses retrieved from AlienVault OTX API.
+
+    .NOTES
+    This function requires the Get-OTXApiKey function to retrieve the AlienVault OTX API key.
+    Ensure that you have a valid API key configured before using this function.
+    #>
+
+    Param(
+    [Parameter(Mandatory=$false)]
+    [string] $MaxPage = 5
+    )
+
+    $apiKey = Get-OTXApiKey
+    $headers = @{
+        "X-OTX-API-KEY" = $apiKey
+    }
+
+    $apiUrl = "https://otx.alienvault.com/api/v1/pulses/subscribed?limit=10&page=1"
+    $actualPages = [int]((Invoke-RestMethod -Uri $apiUrl -Headers $headers).count/10)
+    if([int]$MaxPage -gt $actualPages){$MaxPage = $actualPages}
+    $responseList = @()
+
+    do {
+        $response = Invoke-RestMethod -Uri $apiUrl -Headers $headers
+        $responseList += $response.results
+        $apiUrl = $response.next
+        [int]$percentage=([int]($apiUrl.Split('=')[2])/([int]$MaxPage+1))*100
+        Write-Progress -Activity "Gathering OTX Pulses..." -Status " [ $percentage % ] " -PercentComplete $percentage
+    } while ($response.next.Split('=')[2] -ne ([int]$MaxPage+1))
+
+    Write-Output $responseList
+}
