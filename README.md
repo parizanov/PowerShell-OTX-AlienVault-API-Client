@@ -14,7 +14,9 @@ The Set-OTXApiKey function allows you to set and securely store the API key for 
 None
 
 ### Example
-`Set-OTXApiKey`
+```PowerShell
+Set-OTXApiKey
+```
 
 Prompts the user to enter the API key and securely stores it locally.
 
@@ -32,7 +34,9 @@ The Get-OTXApiKey function retrieves the API key that has been securely stored u
 None
 
 ### Example
-`Get-OTXApiKey`
+```PowerShell
+Get-OTXApiKey
+```
 
 Retrieves the stored API key for the OTX module.
 
@@ -52,7 +56,9 @@ The Get-OTXSubPulses function retrievs all the pulses from the AlienVault OTX (O
 MaxPage (Optional): The maximum number of pages to retrieve. Each page contains a list of pulses. By default, it is set to 5.
 
 ### Example
-`Get-OTXSubPulses -MaxPage 10`
+```PowerShell
+Get-OTXSubPulses -MaxPage 10
+```
 
 ## Installation
   [Steps to be added.]
@@ -66,9 +72,11 @@ Before using the OTX PowerShell module, you need to set your API key using the S
 
 For example:
 
-```
+```PowerShell
 Set-OTXApiKey
+```
 
+```PowerShell
 $pulses = Get-OTXSubPulses -MaxPage 5
 ```
 
