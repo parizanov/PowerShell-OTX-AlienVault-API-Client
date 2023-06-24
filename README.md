@@ -61,7 +61,13 @@ Get-OTXSubPulses -MaxPage 10
 ```
 
 ## Installation
-  [Steps to be added.]
+```PowerShell
+PS C:\temp> Import-Module .\OTX-AlienVault-API-Client.psm1
+```
+
+- If you want to setup the module for long-term use
+  - See [Microsoft documentation](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module?view=powershell-7).
+  - Shortcut - just copy to its own folder in this location: $Env:ProgramFiles\WindowsPowerShell\Modules
 
 ## Prerequisites
 - PowerShell version 5.1 or above.
